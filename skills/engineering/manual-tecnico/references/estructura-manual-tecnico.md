@@ -3,10 +3,14 @@
 Estructura obligatoria de `docs/manual-tecnico.md`. Títulos, numeración y orden deben mantenerse
 exactamente. Debajo de cada sección se indica qué contenido va.
 
+**Nota:** No todas las secciones aplican a todos los tipos de proyecto. Si una sección no es
+relevante para el proyecto (ej. WAF en un CLI, endpoints en una librería), omítela o márcala
+como "No aplica para este tipo de proyecto". Mantén la numeración original para consistencia.
+
 ## Encabezado
 
 ```
-# **Formato Arquitectura <Nombre del sistema>**
+# **Manual Técnico — <Nombre del proyecto>**
 ## **DIRECCIÓN TI**
 # <AUTOR EN MAYÚSCULAS>, <DD/MM/AAAA>
 <!-- manual-tecnico:ultimo-commit=<sha> -->
@@ -22,8 +26,9 @@ Lista con enlaces a todas las secciones y ADRs.
 ---
 
 ## 1. Resumen Ejecutivo
-Qué es el sistema, para quién, stack, dónde se despliega, controles de seguridad principales y
-endpoints dentro del alcance (método, ruta y función Lambda). Estado de aprobación (ticket).
+Qué es el sistema, para quién, stack tecnológico, dónde se despliega, controles de seguridad
+principales y puntos de entrada del sistema (endpoints, comandos CLI, interfaces, etc.).
+Estado de aprobación (ticket) si aplica.
 
 ### 1.1 Propósito del Sistema
 Problema de negocio que resuelve y flujo automatizado de punta a punta.
@@ -45,7 +50,8 @@ Por qué existe esta versión o este cambio.
 ## 2. Arquitectura de Alto Nivel
 
 ### 2.1 Descripción de arquitectura
-Servicios desplegados y cómo se relacionan (frontend, backend, IaC).
+Componentes principales del sistema y cómo se relacionan (frontend, backend, servicios,
+infraestructura, herramientas de build, etc.).
 
 ### 2.2 Diagrama conceptual de arquitectura (Actual)
 ### 2.3 Matriz de trazabilidad de arquitectura (Actual)
@@ -58,8 +64,9 @@ describir el estado anterior al cambio.)
 Imagen del diagrama.
 
 ### 2.7 Matriz de trazabilidad de arquitectura (Propuesta)
-Tabla `| Componente | Ubicación | Detalle | Seguridad Aplicada |`: cliente, frontend, WAFs, S3,
-API Gateway, cada Lambda, Cognito, Secrets Manager, BD y servicios externos.
+Tabla `| Componente | Ubicación | Detalle | Seguridad Aplicada |`: listar todos los componentes
+relevantes del proyecto (cliente, frontend, backend, base de datos, servicios externos,
+infraestructura, etc.).
 
 ### 2.8 Diagrama de infraestructura o de despliegue (Propuesta)
 Imagen del diagrama.
@@ -75,8 +82,8 @@ Tabla `| Componente HW | Ubicación | Ruta artefactos | Seguridad Aplicada |`.
 Tabla `| Funcionalidad | Origen | Destino | Tipo de Dato | Protocolo (Tránsito) | Cifrado (Reposo) | Límite de Confianza |`.
 
 ### 3.2 Especificación de Contratos de Comunicación
-Por cada endpoint: descripción, **Headers de solicitud**, **Payload de solicitud** y **Payload de
-respuesta** (JSON con datos de ejemplo, nunca reales).
+Por cada punto de entrada (endpoint, comando, interfaz): descripción, parámetros de entrada y
+datos de salida (con ejemplos, nunca datos reales).
 
 ### 3.3 Diagrama ciclo de vida de los datos (Security DFD)
 Imagen + convenciones del diagrama (entidades externas, flujos etiquetados, límites de confianza,
@@ -132,8 +139,9 @@ RNF-NN consecutivos, agrupados en:
 ### 6.1 Administración de cuenta o servidor
 Tabla `| IP/Cuenta | Área | Correo |`.
 
-### 6.2 Servicios cloud
-Tabla `| Cuenta | Servicio | Permisos | Área | Correo |` (permisos IAM reales del serverless.yml).
+### 6.2 Servicios de infraestructura
+Tabla `| Cuenta/Servicio | Tipo | Permisos | Área | Correo |` (permisos reales derivados de la
+configuración del proyecto: IaC, Dockerfile, CI/CD, etc.).
 
 ---
 
@@ -146,17 +154,17 @@ Resumen en viñetas.
 Tabla `| Amenaza | Probabilidad | Impacto | Mitigación | Estado |` (ninguna mitigación vacía).
 
 ### 7.3 Controles de Seguridad Implementados
-#### 7.3.1 Perimetral (reglas WAF con prioridad y propósito)
-#### 7.3.2 Red (bucket privado, OAI/OAC, VPC, security groups)
-#### 7.3.3 Aplicación (headers con valor configurado, CORS, controles en código)
+#### 7.3.1 Perimetral (firewall, WAF, rate limiting, IP filtering — lo que aplique)
+#### 7.3.2 Red (aislamiento de red, VPC, security groups, políticas de acceso — lo que aplique)
+#### 7.3.3 Aplicación (headers de seguridad, CORS, validaciones, sanitización, controles en código)
 #### 7.3.4 Datos (cifrado en tránsito/reposo, limpieza de datos temporales)
 
 ### 7.4 Gestión de Secretos
-Tabla backend `| Secreto | Ubicación | Propietario |` (rutas `{stage}/<servicio>/<secreto>`).
-Tabla frontend con variables públicas `VITE_*` + advertencia de que son visibles en el bundle.
+Tabla `| Secreto | Ubicación | Propietario |` (rutas o mecanismo de almacenamiento usado).
+Si hay variables públicas expuestas al cliente, listarlas con advertencia de visibilidad.
 
-### 7.5 SonarQube
-Enlaces a los escaneos frontend/backend + evidencia.
+### 7.5 Análisis Estático de Código
+Enlaces a herramientas de análisis (SonarQube, ESLint, etc.) + evidencia si existe.
 
 ### 7.6 Pentesting
 Estado y evidencia.
@@ -166,10 +174,10 @@ Estado y evidencia.
 ## 8. Estrategia de Despliegue
 
 ### 8.1 Ambientes
-Tabla `| Ambiente | URL | Stage | Propósito |`.
+Tabla `| Ambiente | URL | Identificador | Propósito |`.
 
 ### 8.2 Comandos de Despliegue
-Bloque de código con los scripts reales de `package.json`.
+Bloque de código con los scripts o comandos reales de despliegue del proyecto.
 
 ### 8.3 Estrategia de Rollback
 Pasos numerados con comandos, smoke tests, notificación a stakeholders y tiempo estimado.
