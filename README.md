@@ -6,16 +6,16 @@
 </p>
 
 <p align="center">
-  <img alt="License" src="https://img.shields.io/github/license/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills">
-  <img alt="Latest Release" src="https://img.shields.io/github/v/release/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills">
-  <img alt="GitHub Stars" src="https://img.shields.io/github/stars/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills?style=social">
+  <img alt="License" src="https://img.shields.io/github/license/emmanuel-tabares-ortiz-tech/develpment-custom-skills">
+  <img alt="Latest Release" src="https://img.shields.io/github/v/release/emmanuel-tabares-ortiz-tech/develpment-custom-skills">
+  <img alt="GitHub Stars" src="https://img.shields.io/github/stars/emmanuel-tabares-ortiz-tech/develpment-custom-skills?style=social">
   <img alt="Skills" src="https://img.shields.io/badge/skills-3-blue">
 </p>
 
 ## Quick start
 
 ```bash
-npx skills@latest add emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills
+npx skills@latest add emmanuel-tabares-ortiz-tech/develpment-custom-skills
 ```
 
 ## Skills
@@ -33,20 +33,20 @@ npx skills@latest add emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-
 ### Option 1 — skills.sh (recommended, Claude Code)
 
 ```bash
-npx skills@latest add emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills
+npx skills@latest add emmanuel-tabares-ortiz-tech/develpment-custom-skills
 ```
 
 To uninstall:
 
 ```bash
-npx skills@latest remove emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills
+npx skills@latest remove emmanuel-tabares-ortiz-tech/develpment-custom-skills
 ```
 
 
 ### Option 2 — Other agents (Cursor, Codex, Antigravity)
 
 ```bash
-git clone https://github.com/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills ~/.dev-custom-skills
+git clone https://github.com/emmanuel-tabares-ortiz-tech/develpment-custom-skills ~/.dev-custom-skills
 cd ~/your-project
 ~/.dev-custom-skills/scripts/install-to-agent.sh <agent>
 ```
