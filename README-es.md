@@ -1,21 +1,21 @@
 [English](README.md) · [Español](README-es.md)
 
 <p align="center">
-  <h1 align="center">Spec-Driven Skills para Claude Code</h1>
+  <h1 align="center">Development Custom Skills para Claude Code</h1>
   <p align="center">Planifica la feature. Apruébala. Impleméntala paso a paso.</p>
 </p>
 
 <p align="center">
-  <img alt="Licencia" src="https://img.shields.io/github/license/Klerith/fernando-skills">
-  <img alt="Último release" src="https://img.shields.io/github/v/release/Klerith/fernando-skills">
-  <img alt="GitHub Stars" src="https://img.shields.io/github/stars/Klerith/fernando-skills?style=social">
+  <img alt="Licencia" src="https://img.shields.io/github/license/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills">
+  <img alt="Último release" src="https://img.shields.io/github/v/release/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills">
+  <img alt="GitHub Stars" src="https://img.shields.io/github/stars/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills?style=social">
   <img alt="Skills" src="https://img.shields.io/badge/skills-3-blue">
 </p>
 
 ## Inicio rápido
 
 ```bash
-npx skills@latest add Klerith/fernando-skills
+npx skills@latest add emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills
 ```
 
 ## Skills
@@ -214,22 +214,22 @@ Esa separación es lo que evita el scope creep silencioso.
 ### Opción 1 — skills.sh (recomendado, Claude Code)
 
 ```bash
-npx skills@latest add Klerith/fernando-skills
+npx skills@latest add emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills
 ```
 
 Para desinstalar:
 
 ```bash
-npx skills@latest remove Klerith/fernando-skills
+npx skills@latest remove emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills
 ```
 
 
 ### Opción 2 — Otros agentes (Cursor, Codex, Antigravity)
 
 ```bash
-git clone https://github.com/Klerith/fernando-skills ~/.fernando-skills
+git clone https://github.com/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills ~/.dev-custom-skills
 cd ~/tu-proyecto
-~/.fernando-skills/scripts/install-to-agent.sh <agent>
+~/.dev-custom-skills/scripts/install-to-agent.sh <agent>
 ```
 
 `<agent>` puede ser `claude`, `cursor`, `codex` o `antigravity`. Ver [README.md](./README.md#installation) para detalles.

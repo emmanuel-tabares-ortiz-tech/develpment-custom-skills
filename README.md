@@ -1,21 +1,21 @@
 [English](README.md) · [Español](README-es.md)
 
 <p align="center">
-  <h1 align="center">Spec-Driven Skills for Claude Code</h1>
+  <h1 align="center">Development Custom Skills for Claude Code</h1>
   <p align="center">Plan the feature. Approve it. Implement it step by step.</p>
 </p>
 
 <p align="center">
-  <img alt="License" src="https://img.shields.io/github/license/Klerith/fernando-skills">
-  <img alt="Latest Release" src="https://img.shields.io/github/v/release/Klerith/fernando-skills">
-  <img alt="GitHub Stars" src="https://img.shields.io/github/stars/Klerith/fernando-skills?style=social">
+  <img alt="License" src="https://img.shields.io/github/license/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills">
+  <img alt="Latest Release" src="https://img.shields.io/github/v/release/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills">
+  <img alt="GitHub Stars" src="https://img.shields.io/github/stars/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills?style=social">
   <img alt="Skills" src="https://img.shields.io/badge/skills-3-blue">
 </p>
 
 ## Quick start
 
 ```bash
-npx skills@latest add Klerith/fernando-skills
+npx skills@latest add emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills
 ```
 
 ## Skills
@@ -214,22 +214,22 @@ That separation is what prevents silent scope creep.
 ### Option 1 — skills.sh (recommended, Claude Code)
 
 ```bash
-npx skills@latest add Klerith/fernando-skills
+npx skills@latest add emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills
 ```
 
 To uninstall:
 
 ```bash
-npx skills@latest remove Klerith/fernando-skills
+npx skills@latest remove emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills
 ```
 
 
 ### Option 2 — Other agents (Cursor, Codex, Antigravity)
 
 ```bash
-git clone https://github.com/Klerith/fernando-skills ~/.fernando-skills
+git clone https://github.com/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills ~/.dev-custom-skills
 cd ~/your-project
-~/.fernando-skills/scripts/install-to-agent.sh <agent>
+~/.dev-custom-skills/scripts/install-to-agent.sh <agent>
 ```
 
 `<agent>` can be `claude`, `cursor`, `codex`, or `antigravity`.
