@@ -3,45 +3,21 @@ name: sonar-scan-fix
 description: Scans the project with SonarQube via MCP, displays issues, and fixes them in batches on a dedicated branch. Requires a running SonarQube Server instance and a container engine (podman/docker/nerdctl).
 disable-model-invocation: true
 argument-hint: '[project-key]'
-allowed-tools: Read, Glob, Grep, Edit, Write, AskUserQuestion, Bash(podman:*), Bash(docker:*), Bash(nerdctl:*), Bash(curl:*), Bash(sonar-scanner:*), Bash(git:*), Bash(claude:*), Bash(ls:*), Bash(cat:*), Bash(date:*), Bash(npm:*), Bash(npx:*), Bash(mvn:*), Bash(gradle:*), Bash(command:*), Bash(printenv:*), Bash(wc:*), Bash(pytest:*), Bash(dotnet:*)
+allowed-tools: >-
+  Read, Glob, Grep, Edit, Write, AskUserQuestion,
+  Bash(${CLAUDE_SKILL_DIR}/scripts/*),
+  Bash(podman image *), Bash(podman pull *),
+  Bash(docker image *), Bash(docker pull *),
+  Bash(nerdctl image *), Bash(nerdctl pull *),
+  Bash(git status *), Bash(git diff *), Bash(git checkout -b *),
+  Bash(claude mcp list), Bash(claude mcp add *)
 ---
 
 # /sonar-scan-fix — SonarQube scan & fix cycle
 
 ## Session context
 
-Today's date:
-!`date +%F`
-
-Operating system:
-!`uname -s`
-
-Container engine (podman):
-!`command -v podman`
-
-Container engine (docker):
-!`command -v docker`
-
-Container engine (nerdctl):
-!`command -v nerdctl`
-
-SONAR_HOST_URL:
-!`printenv SONAR_HOST_URL`
-
-SONAR_TOKEN is set:
-!`printenv SONAR_TOKEN`
-
-Current branch:
-!`git branch --show-current`
-
-Repository root:
-!`git rev-parse --show-toplevel`
-
-sonar-project.properties:
-!`cat sonar-project.properties`
-
-Registered MCP servers:
-!`claude mcp list`
+!`${CLAUDE_SKILL_DIR}/scripts/context.sh`
 
 ---
 
@@ -81,21 +57,14 @@ If the user retries, run `command -v podman 2>/dev/null || command -v docker 2>/
 
 ### Step 2 — Ensure the MCP image is available
 
-Check if the image exists locally:
+Check and pull if needed:
 
 ```bash
-$ENGINE image inspect docker.io/sonarsource/sonarqube-mcp >/dev/null 2>&1
+${CLAUDE_SKILL_DIR}/scripts/ensure-image.sh $ENGINE
 ```
 
-- If it exists → continue.
-- If it does not exist → pull it:
-
-```bash
-$ENGINE pull docker.io/sonarsource/sonarqube-mcp
-```
-
-- If the pull succeeds → continue.
-- If the pull fails → **PAUSE:**
+- If output is `EXISTS` or `PULLED` → continue.
+- If output is `PULL_FAILED` → **PAUSE:**
 
 ```
 Failed to pull docker.io/sonarsource/sonarqube-mcp.
@@ -145,13 +114,13 @@ On retry, re-check with `printenv SONAR_HOST_URL` and `test -n "$SONAR_TOKEN" &&
 **Once both are set**, validate the connection:
 
 ```bash
-curl -sf -u "$SONAR_TOKEN:" "$SONAR_HOST_URL/api/authentication/validate"
+${CLAUDE_SKILL_DIR}/scripts/validate-token.sh
 ```
 
-Expected response contains `"valid":true`.
+The script prints exactly one word:
 
-- If valid → continue.
-- If `"valid":false` → **PAUSE:**
+- `VALID` → continue.
+- `INVALID` → **PAUSE:**
 
 ```
 Token authentication failed. The token may be expired, revoked, or lack permissions.
@@ -160,16 +129,18 @@ Generate a new token at: $SONAR_HOST_URL/account/security
 
 Options: `["I have updated the token — retry", "Abort"]`
 
-- If connection error (timeout, certificate error, etc.) → **PAUSE:**
+- `NETWORK_ERROR` or `CERT_ERROR` → **PAUSE:**
 
 ```
 Cannot reach $SONAR_HOST_URL.
-Diagnosis: <show curl error>
+Diagnosis: <show the script output>
 
 Check: Are you connected to the VPN? Does the URL require a custom CA certificate?
 ```
 
 Options: `["I have fixed connectivity — retry", "Abort"]`
+
+- `MISSING_ENV` → treat as "variables not set" (same flow as above).
 
 ---
 
@@ -230,20 +201,10 @@ Options: `["The file is at a different path (I will specify)", "Help me create a
 
 If the user asks you to create one, ask for `sonar.projectKey` and `sonar.sources`, then write a minimal file. Do NOT include `sonar.token` in the file.
 
-- If found → run the scanner. Detect the available scanner command:
-  1. `sonar-scanner` (standalone CLI)
-  2. `mvn sonar:sonar` (Maven projects)
-  3. `npx sonarqube-scanner` (Node projects)
-  4. `gradle sonarqube` (Gradle projects)
-  5. `dotnet sonarscanner` (.NET projects)
-
-Use the first one available. Pass the token and quality-gate wait flag via command-line arguments (never in the properties file):
+- If found → run the scanner. The script auto-detects the available scanner (sonar-scanner, mvn, gradle, npx, dotnet):
 
 ```bash
-sonar-scanner \
-  -Dsonar.token="$SONAR_TOKEN" \
-  -Dsonar.host.url="$SONAR_HOST_URL" \
-  -Dsonar.qualitygate.wait=true
+${CLAUDE_SKILL_DIR}/scripts/scan.sh
 ```
 
 If the scan fails, show the error and ask the user how to proceed.
@@ -254,14 +215,13 @@ If the scan fails, show the error and ask the user how to proceed.
 
 **Primary method — MCP tools:** Use the SonarQube MCP server's tools to list open issues for the project/branch. The MCP exposes tools for searching issues.
 
-**Fallback — REST API:** If MCP tools are not available (server not registered, not loaded, or erroring), use the REST API directly:
+**Fallback — REST API:** If MCP tools are not available (server not registered, not loaded, or erroring), use the fetch script:
 
 ```bash
-curl -sf -u "$SONAR_TOKEN:" \
-  "$SONAR_HOST_URL/api/issues/search?projectKeys=<project-key>&statuses=OPEN,CONFIRMED,REOPENED&ps=500&p=1"
+${CLAUDE_SKILL_DIR}/scripts/fetch-issues.sh <project-key>
 ```
 
-Paginate (`p=2`, `p=3`, …) until all issues are retrieved.
+The script paginates automatically, saves full JSON to a temp file, and prints a summary with counts by severity.
 
 Parse and categorize every issue by:
 - **Severity:** BLOCKER, CRITICAL, MAJOR, MINOR, INFO
