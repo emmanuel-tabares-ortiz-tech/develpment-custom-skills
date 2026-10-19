@@ -11,10 +11,10 @@ allowed-tools: Read, Glob, Grep, Edit, Write, AskUserQuestion, Bash(podman:*), B
 ## Session context
 
 Today's date:
-!`date +%F 2>/dev/null || powershell -NoProfile -c "Get-Date -Format yyyy-MM-dd" 2>/dev/null`
+!`date +%F`
 
 Operating system:
-!`uname -s 2>/dev/null || echo "Windows"`
+!`uname -s`
 
 Container engine available:
 !`command -v podman 2>/dev/null || command -v docker 2>/dev/null || command -v nerdctl 2>/dev/null || echo "NONE"`
