@@ -16,26 +16,32 @@ Today's date:
 Operating system:
 !`uname -s`
 
-Container engine available:
-!`command -v podman 2>/dev/null || command -v docker 2>/dev/null || command -v nerdctl 2>/dev/null || echo "NONE"`
+Container engine (podman):
+!`command -v podman`
+
+Container engine (docker):
+!`command -v docker`
+
+Container engine (nerdctl):
+!`command -v nerdctl`
 
 SONAR_HOST_URL:
-!`test -n "$SONAR_HOST_URL" && echo "SET → $SONAR_HOST_URL" || echo "NOT SET"`
+!`printenv SONAR_HOST_URL`
 
-SONAR_TOKEN:
-!`test -n "$SONAR_TOKEN" && echo "SET (value hidden)" || echo "NOT SET"`
+SONAR_TOKEN is set:
+!`printenv SONAR_TOKEN`
 
 Current branch:
-!`git branch --show-current 2>/dev/null`
+!`git branch --show-current`
 
 Repository root:
-!`git rev-parse --show-toplevel 2>/dev/null || pwd`
+!`git rev-parse --show-toplevel`
 
 sonar-project.properties:
-!`cat sonar-project.properties 2>/dev/null || echo "NOT FOUND"`
+!`cat sonar-project.properties`
 
 Registered MCP servers:
-!`claude mcp list 2>/dev/null || echo "Could not list MCP servers"`
+!`claude mcp list`
 
 ---
 
